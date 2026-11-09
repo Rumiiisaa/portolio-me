@@ -2952,12 +2952,12 @@ const GLITCH=(()=>{const ttl=$('fl-ttl');let timer=0,on=false;const dcv=ttl.quer
  return{start(){if(on)return;on=true;timer=setTimeout(burst,2600);},stop(){on=false;clearTimeout(timer);ttl.classList.remove('gl');}};})();
 /* ---------- 進行 ---------- */
 let si=-1,lock=0;const timers=[];const later=(f,ms)=>timers.push(setTimeout(f,ms));const clearAll=()=>{timers.forEach(clearTimeout);timers.length=0;};
-function intro(){const keepW=stage.classList.contains('white');clearAll();state='intro';si=-1;stage.className=keepW?'white':'';if(keepW)later(()=>stage.classList.remove('white'),350);DEPTH.start();sds.forEach(s=>{s.classList.remove('in','post');});sbgs.forEach(b=>b.classList.remove('on'));clearTimeout(bgTimer);hint.classList.remove('on');PT.reset();GX.reset();
+function intro(){const keepW=stage.classList.contains('white');clearAll();state='intro';si=-1;lock=performance.now()+1200;stage.className=keepW?'white':'';if(keepW)later(()=>stage.classList.remove('white'),350);DEPTH.start();sds.forEach(s=>{s.classList.remove('in','post');});sbgs.forEach(b=>b.classList.remove('on'));clearTimeout(bgTimer);hint.classList.remove('on');PT.reset();GX.reset();
  later(()=>{stage.classList.add('lines');},500);later(()=>{stage.classList.add('words');},900);
  later(()=>stage.classList.add('the'),2300);later(()=>stage.classList.add('wave'),2500);
  later(()=>stage.classList.add('crow'),2600);
  later(()=>stage.classList.add('settle'),4500);
- later(()=>hint.classList.add('on'),3400);later(()=>{state='ready';GLITCH.start();},5400);}
+ later(()=>hint.classList.add('on'),3400);later(()=>{state='ready';GLITCH.start();},4800);}
 function scatter(){state='busy';hint.classList.remove('on');GLITCH.stop();later(()=>DEPTH.stop(),700);stage.classList.remove('wave');stage.classList.add('wavedis');seedScatter();stage.classList.add('scatter');PT.dissolve();GX.grid(1);later(()=>stage.classList.add('dissolve'),80);stage.classList.add('gone');
  later(()=>{show(0);},1500);later(()=>{state='slides';},3200);}
 function show(i,back){si=i;PT.figure(i,i%2?'L':'R');const el=sds[i];clearTimeout(bgTimer);const bg=sbgs[i];bg.style.height=(el.offsetHeight+el.offsetHeight*.42+80)+'px';bgTimer=setTimeout(()=>bg.classList.add('on'),1150);el.classList.add('snap');el.classList.remove('in');if(back)el.classList.add('post');else el.classList.remove('post');void el.offsetWidth;el.classList.remove('snap');el.classList.remove('post');el.classList.add('in');}
@@ -2970,10 +2970,11 @@ function unscatter(){state='busy';hide(0,true);GX.grid(0);later(()=>{stage.class
 function relock(){lock=performance.now();stage.classList.remove('fin','white');GX.unzoom();state='busy';PT.dissolve();GX.grid(1);later(()=>{show(DATA.length-1,true);},400);later(()=>state='slides',2600);}
 
 const root=document.getElementById('flow');let onBack=()=>{if(typeof WORKS!=='undefined'){WORKS.restore();if(!WORKS.active)WORKS.show();WORKS.wheel(-140);}};
-function wheelIn(dy){const now=performance.now();if(now-lock<280)return;
- if(state==='intro'||state==='ready'){if(dy<0){lock=now;state='busy';hideAll(onBack);return;}if(dy>0){lock=now;scatter();return;}}
- else if(state==='slides'){lock=now;if(dy>0)next();else prev();}
- else if(state==='end'){if(dy<0){lock=now;relock();}}}
+function wheelIn(dy){const now=performance.now();if(now-lock<350)return;lock=now;
+ if(state==='intro'){if(dy<0){state='busy';hideAll(onBack);return;}return;}
+ if(state==='ready'){if(dy>0){state='busy';scatter();return;}else if(onBack){state='busy';hideAll(onBack);return;}}
+ else if(state==='slides'){if(dy>0)next();else prev();}
+ else if(state==='end'){if(dy<0){relock();}}}
 function hideAll(cb){clearAll();DEPTH.stop();GLITCH.stop();root.classList.remove('show');setTimeout(()=>{root.style.display='none';PT.reset();GX.reset();stage.className='';state='off';cb&&cb();},800);}
 return{prep(){sds.forEach(s=>{s.classList.remove('in','post');});sbgs.forEach(b=>b.classList.remove('on'));hint.classList.remove('on');try{PT.reset();GX.reset();}catch(e){}stage.classList.add('white');},show(){root.style.display='block';void root.offsetWidth;root.classList.add('show');intro();},again(){stage.classList.remove('white');root.style.display='block';root.classList.add('show');GX.unzoom();intro();},wheel:wheelIn,hide:hideAll,set onBack(f){onBack=f;},get state(){return state;},get active(){return state!=='off';}};
 })();
@@ -3320,7 +3321,7 @@ addEventListener('wheel',e=>{const now=performance.now();if(DRAWER.active){e.pre
    if(WORKS.target>=0.998){if(!wkEndAt)wkEndAt=now;}else wkEndAt=0;
    /* 縦向き: 末尾/先頭の作品でも詞書がまだスクロールできるなら先にそれを（03 で本文が読めずに下の章へ降りてしまわないように） */
    if(WORKS.canTxt(1))wkTxtAt=now;   /* 詞書を読み終えた直後もひと呼吸置く（惰性のホイールで降りないように） */
-   if(e.deltaY>0&&WORKS.target>=0.998&&!WORKS.canTxt(1)){if(now-wkEndAt<1400||now-wkTxtAt<1000||now-wheelLock<900)return;wheelLock=now;FLOW.onBack=()=>{WORKS.restore();WORKS.wheel(-140);};FLOW.show();return;}if(e.deltaY<0&&WORKS.target<=0.002&&!WORKS.canTxt(-1)){if(now-wheelLock<900)return;wheelLock=now;leaveWhite();}else WORKS.wheel(e.deltaY);return;}
+   if(e.deltaY>0&&WORKS.target>=0.998&&!WORKS.canTxt(1)){if(now-wkEndAt<380||now-wheelLock<450)return;wheelLock=now;WORKS.fadeUp();FLOW.onBack=()=>{WORKS.restore();WORKS.wheel(-140);};FLOW.show();return;}if(e.deltaY<0&&WORKS.target<=0.002&&!WORKS.canTxt(-1)){if(now-wheelLock<900)return;wheelLock=now;leaveWhite();}else WORKS.wheel(e.deltaY);return;}
   if(elevBusy||crowOn||now-wheelLock<700)return;wheelLock=now;
   if(whiteState){if(e.deltaY<0)leaveWhite();return;}
   if(e.deltaY<0&&elevP<=0){return;}
@@ -3330,7 +3331,7 @@ addEventListener('wheel',e=>{const now=performance.now();if(DRAWER.active){e.pre
  if(now-wheelLock<900||Math.abs(e.deltaY)<8)return;wheelLock=now;go(cur+(e.deltaY>0?1:-1));},{passive:false});
 addEventListener('keydown',e=>{if(busy||DRAWER.active)return;const dn=e.key==='ArrowDown'||e.key==='PageDown'||e.key===' ',up=e.key==='ArrowUp'||e.key==='PageUp';
  if(FLOW.active){if(dn)FLOW.wheel(120);if(up)FLOW.wheel(-120);return;}
- if(cur===3){if(elevBusy||crowOn)return;if(whiteState&&WORKS.active){if(WORKS.modal)return;if(dn&&WORKS.target>=0.998){FLOW.show();return;}if(up&&WORKS.target<=0.002)leaveWhite();else WORKS.wheel((dn?1:up?-1:0)*innerHeight*.9);return;}if(whiteState){if(up)leaveWhite();return;}if(up&&elevP<=0){return;}if(dn&&elevP>=1){startCrow();return;}if(dn&&elevP<=0&&ALT[3]){CHG.revert(()=>elevTo(1));return;}elevTo(dn?1:0);return;}
+ if(cur===3){if(elevBusy||crowOn)return;if(whiteState&&WORKS.active){if(WORKS.modal)return;if(dn&&WORKS.target>=0.998){WORKS.fadeUp();FLOW.onBack=()=>{WORKS.restore();WORKS.wheel(-140);};FLOW.show();return;}if(up&&WORKS.target<=0.002)leaveWhite();else WORKS.wheel((dn?1:up?-1:0)*innerHeight*.9);return;}if(whiteState){if(up)leaveWhite();return;}if(up&&elevP<=0){return;}if(dn&&elevP>=1){startCrow();return;}if(dn&&elevP<=0&&ALT[3]){CHG.revert(()=>elevTo(1));return;}elevTo(dn?1:0);return;}
  if(dn)go(cur+1);if(up)go(cur-1);});
 /* タッチ → ホイール読み替え（全章共通）。指の上下移動を wheel イベントに変換して、既存のホイール処理（章送り・絵巻・モーダル・ドロワー・AFTER）へそのまま流す */
 (function(){let ty=0,tx=0,acc=0,el=null,t0=0,vy=0,lastT=0,lastY=0;const STEP=14;
@@ -3340,7 +3341,7 @@ addEventListener('keydown',e=>{if(busy||DRAWER.active)return;const dn=e.key==='A
  addEventListener('touchmove',e=>{const t=e.touches[0];const now=performance.now();const dy=lastY-t.clientY;const dx=lastX-t.clientX;const dt=Math.max(1,now-lastT);lastT=now;lastY=t.clientY;lastX=t.clientX;
   /* 縦向きの WORKS: 横スワイプで絵巻を送る（最初の数 px でどちらの向きか決める） */
   if(horiz===null&&(Math.abs(t.clientX-tx)>8||Math.abs(t.clientY-ty)>8))horiz=Math.abs(t.clientX-tx)>Math.abs(t.clientY-ty);
-  if(horiz&&PORT&&typeof WORKS!=='undefined'&&WORKS.active&&whiteState&&!WORKS.modal&&!DRAWER.active){accX+=dx;if(Math.abs(accX)>=STEP){WORKS.wheel(-accX*2.6,true);accX=0;}   /* 右へスワイプ＝巻物を右へ引く＝次の作品（絵巻は左へ進む） */e.preventDefault();return;}
+  if(horiz&&PORT&&typeof WORKS!=='undefined'&&WORKS.active&&whiteState&&!WORKS.modal&&!DRAWER.active){accX+=dx;if(Math.abs(accX)>=STEP){WORKS.wheel(-accX*2.6,true);if(WORKS.target>=0.998&&accX>0){WORKS.fadeUp();FLOW.onBack=()=>{WORKS.restore();WORKS.wheel(-140);};FLOW.show();accX=0;e.preventDefault();return;}accX=0;}e.preventDefault();return;}
   vy=vy*.6+(dy/dt)*.4;acc+=dy;
   if(Math.abs(acc)>=STEP){fire(el,acc*2.2);acc=0;}e.preventDefault();},{passive:false});
  addEventListener('touchend',e=>{/* 指を離した勢いで少し惰性を足す（慣性スクロールの章で自然に止まるように） */if(horiz)return;let v=vy*16;if(Math.abs(v)<4)return;let n=0;(function m(){v*=.86;if(Math.abs(v)<1.5||n++>24)return;fire(el,v*2.2);requestAnimationFrame(m);})();},{passive:true});
