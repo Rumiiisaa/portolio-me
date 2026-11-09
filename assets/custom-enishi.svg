@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 260">
+  <defs>
+    <filter id="ebrush" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.035 0.06" numOctaves="3" seed="23" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="4.5" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+  <text x="24" y="185" fill="#f2f0ec" font-family="'Shippori Mincho B1','Yu Mincho',serif" font-weight="800" font-size="155" filter="url(#ebrush)">匠</text>
+  <text x="215" y="135" fill="#f2f0ec" font-family="'Cinzel','Cormorant Garamond',serif" font-weight="400" font-size="34" letter-spacing="8">TAKUMI</text>
+  <text x="218" y="175" fill="#b8b4ac" font-family="'Jost',sans-serif" font-weight="300" font-size="14" letter-spacing="5">CRAFT THAT ENDURES</text>
+</svg>
