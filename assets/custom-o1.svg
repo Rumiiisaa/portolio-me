@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 330 220">
+  <defs>
+    <filter id="brush" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.04 0.08" numOctaves="3" seed="11" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="3.5" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+  <text x="12" y="162" fill="#f2f0ec" font-family="'Shippori Mincho B1','Yu Mincho','MS Mincho',serif" font-weight="800" font-size="102" letter-spacing="6" filter="url(#brush)">墨から</text>
+</svg>

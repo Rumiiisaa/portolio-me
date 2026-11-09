@@ -1,4 +1,18 @@
-node_modules/
-.next/
+# System / Environment
 .env
 .env.local
+.DS_Store
+Thumbs.db
+
+# Tools & Scratch
+.playwright-mcp/
+.write-test
+*.tsbuildinfo
+
+# Verification & Backups
+backup-static/
+backup-v2/
+verification/
+ASSETS.json
+VERIFY.json
+PLAN-4CS-TRANSFORMATION.md
