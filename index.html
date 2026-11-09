@@ -1315,7 +1315,7 @@ const LOADER=(()=>{
     <canvas class="abs" id="glintCv" width="600" height="572" style="z-index:3;mix-blend-mode:hard-light;pointer-events:none;opacity:0;transition:opacity .6s"></canvas>
     <div class="abs fwrap" id="fwrap"><img class="q1" src="assets/0bf4409fa6a0.webp" alt=""><img class="q2" src="assets/0bf4409fa6a0.webp" alt=""><img class="q3" src="assets/0bf4409fa6a0.webp" alt=""><img class="q4" src="assets/0bf4409fa6a0.webp" alt=""></div>
     <div class="ill" id="illL"><img src="assets/55dbb761714b.webp" alt=""></div>
-    <div class="ill" id="illR"><img src="assets/55dbb761714b.webp" alt="" style="transform:scaleX(-1)"></div>
+    <div class="ill" id="illR"><img src="assets/a04a5da100c7.webp" alt=""></div>
     <div class="abs logo bl soft" data-fade data-go="top">Akari K.</div>
     <div class="abs studio bl soft" data-fade style="display:none"></div>
     <div class="abs menu bl soft" data-fade>MENU <span style="font-size:14px">二</span></div>
@@ -1654,7 +1654,7 @@ window.PRELINK=(function(){const srcOf=new WeakMap(),shOf=new WeakMap(),alias=ne
 })();
 </script>
 <script>
-const A={bg03:'assets/custom-bg03.jpg?v=4',bg03p:'assets/custom-bg03p.webp?v=4',bg03up:'assets/ac01456c6c45.webp',brush2dsp:'assets/custom-o3-sp.svg',brush2d:'assets/custom-o3.svg',in03:'assets/custom-in03.jpg?v=2',bg03u:'assets/62936fe65677.webp',in03u:'assets/db91fb6f89fb.webp',samurai:'assets/55dbb761714b.webp',frame:'assets/0bf4409fa6a0.webp'};
+const A={bg03:'assets/custom-bg03.jpg?v=4',bg03p:'assets/custom-bg03p.webp?v=4',bg03up:'assets/ac01456c6c45.webp',brush2dsp:'assets/custom-o3-sp.svg',brush2d:'assets/custom-o3.svg',in03:'assets/custom-in03.jpg?v=2',bg03u:'assets/62936fe65677.webp',in03u:'assets/db91fb6f89fb.webp',samurai:'assets/55dbb761714b.webp',man:'assets/a04a5da100c7.webp',frame:'assets/0bf4409fa6a0.webp'};
 const $=id=>document.getElementById(id);
 const FR={},IN={};
 const cl=(v,a,b)=>Math.max(a,Math.min(b,v)), lerp=(a,b,t)=>a+(b-a)*t, mix=lerp, seg=(t,a,b)=>cl((t-a)/(b-a),0,1);
@@ -2268,7 +2268,7 @@ function enterPG(P){mark('enterPG');resetPG();fluidOn=window.MOBILE?0:1;bgMat.un
  // 中央画像: ブラーをかけながらフェードイン
  inner.visible=false;const ii=$('inimg');ii.classList.remove('on');ii.src=A[inK(cur)];CHG.abort();CHG.enter();setTimeout(()=>ii.classList.add('on'),1300);   // 枠が噛み合ってからブラーが解ける
  // イラスト（左右端のダストも一緒に）
- illL.querySelector('img').src=P.left;illL.classList.add('on');illR.classList.add('on');
+ illL.querySelector('img').src=P.left;illL.classList.add('on');illR.querySelector('img').src=P.right||A.man;illR.classList.add('on');
  // 下のキャッチ: スクランブル（色は本文と同じ）
  pg.querySelectorAll('[data-scr]').forEach((el,i)=>rise(el,500+i*120,el.closest('.big')?70:18));   // 幅を変えず、左から順に下からせり上がる
  const toEl=pg.querySelector('.big .to');toEl.style.transition='none';toEl.classList.remove('on');void toEl.offsetWidth;toEl.style.transition='';setTimeout(()=>toEl.classList.add('on'),720);   // To は BRUSH に合わせてブラーフェード
@@ -2276,7 +2276,7 @@ function enterPG(P){mark('enterPG');resetPG();fluidOn=window.MOBILE?0:1;bgMat.un
 function leavePG(){fluidOn=0;CHG.leave();pg.classList.remove('zoom');pg.classList.add('out');skel.classList.add('out');glintSheen=0;const a0=performance.now();(function fo(){const k=cl((performance.now()-a0)/400,0,1);inMat.uniforms.uAlpha.value=1-k;if(k<1)requestAnimationFrame(fo);else inner.visible=false;})();}
 
 /* ---------------- ページ遷移 ---------------- */
-const PAGES=[{bg:'bg03',inner:'in03',bgu:'bg03u',innu:'in03u',left:A.samurai,light:true,swap:'ripple'},{bg:'bg03',inner:'in03',bgu:'bg03u',innu:'in03u',left:A.samurai,light:true,swap:'ripple'},{bg:'bg03',inner:'in03',bgu:'bg03u',innu:'in03u',left:A.samurai,light:true,swap:'ripple'},{bg:'bg03',inner:'in03',bgu:'bg03u',innu:'in03u',left:A.samurai,light:true,swap:'ripple'}];
+const PAGES=[{bg:'bg03',inner:'in03',bgu:'bg03u',innu:'in03u',left:A.samurai,right:A.man,light:true,swap:'ripple'},{bg:'bg03',inner:'in03',bgu:'bg03u',innu:'in03u',left:A.samurai,right:A.man,light:true,swap:'ripple'},{bg:'bg03',inner:'in03',bgu:'bg03u',innu:'in03u',left:A.samurai,right:A.man,light:true,swap:'ripple'},{bg:'bg03',inner:'in03',bgu:'bg03u',innu:'in03u',left:A.samurai,right:A.man,light:true,swap:'ripple'}];
 const ALT={2:false,3:false};const bgK=i=>{const P=PAGES[i];if(ALT[i]&&P.bgu)return (PORT&&tex[P.bgu+'p'])?P.bgu+'p':P.bgu;return (PORT&&tex[P.bg+'p'])?P.bg+'p':P.bg;},inK=i=>{const P=PAGES[i];return ALT[i]&&P.innu?P.innu:P.inner;};   /* Change で浮世絵側に入れ替わっているページ */
 let cur=0,busy=false,t0=performance.now();
 function dots(){document.querySelectorAll('#dots i').forEach((d,i)=>d.classList.toggle('on',i===cur));}
